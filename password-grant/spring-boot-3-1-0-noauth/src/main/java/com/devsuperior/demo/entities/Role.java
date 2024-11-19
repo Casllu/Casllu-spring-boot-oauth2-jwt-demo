@@ -1,25 +1,19 @@
 package com.devsuperior.demo.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_role")
-public class Role {
+public class Role implements GrantedAuthority {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String authority;
-
-	@ManyToMany
-	@JoinTable(name = "tb_user_role",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
-
 
 	public Role() {
 	}
@@ -37,6 +31,7 @@ public class Role {
 		this.id = id;
 	}
 
+	@Override
 	public String getAuthority() {
 		return authority;
 	}
@@ -45,18 +40,7 @@ public class Role {
 		this.authority = authority;
 	}
 
-	public void addRole(Role role) {
-		roles.add(role);
-	}
 
-	public boolean hasRole(String roleName){
-		for (Role role : roles) {
-			if (role.getAuthority().equals(roleName)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public boolean equals(Object o) {
